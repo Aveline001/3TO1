@@ -120,14 +120,24 @@ nav {
 }
 .btn-ghost:hover { color: var(--ink); border-color: var(--muted); }
 
-/* Bottle SVG */
-.hero-bottle {
-  flex: 0 0 auto; width: clamp(200px, 30vw, 360px);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; animation: fadeIn 1.2s 0.5s ease both;
-  position: relative; z-index: 2;
+/* Bottle IMAGE */
+.hero-bottle-img {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  animation: fadeIn 1.2s 0.5s ease both;
+  position: relative;
+  z-index: 2;
 }
-.hero-bottle svg { filter: drop-shadow(0 40px 80px #0003) drop-shadow(0 0 40px #4a8c3822); }
+.kutu {
+  width: clamp(160px, 22vw, 300px);
+  height: auto;
+  opacity: 0.85;
+  filter: drop-shadow(0 40px 80px #0005) drop-shadow(0 0 40px #4a8c3822);
+  display: block;
+}
 
 /* SECTION BASE */
 section { padding: 100px 48px; }
@@ -396,7 +406,8 @@ body::after {
   .nav-links { display: none; }
   section { padding: 72px 24px; }
   #hero { flex-direction: column; padding: 100px 24px 60px; }
-  .hero-bottle { margin-top: 40px; }
+  .hero-bottle-img { margin-top: 32px; }
+  .kutu { width: clamp(140px, 55vw, 240px); }
   .values-grid { grid-template-columns: 1fr 1fr; }
   .product-inner, .glass-inner, .comp-grid { grid-template-columns: 1fr; }
   .campaign-grid { grid-template-columns: 1fr; }
@@ -448,25 +459,9 @@ body::after {
     </div>
   </div>
 
-  
-
-     <html>
-<body>
-
-
-<img src="https://plain-eeur-prod-public.komododecks.com/202606/03/ZeMlgQVTOSbaoI1yLLCU/image.png" class="kutu">
-<style>
-.kutu {
-    position: absolute;
-    margin: 0 auto;
-    right: 730px;
-    width: 225px;
-    height: 450px;
-    opacity: 80%;
-
-}
-</style>
-
+  <div class="hero-bottle-img">
+    <img src="https://plain-eeur-prod-public.komododecks.com/202606/03/ZeMlgQVTOSbaoI1yLLCU/image.png" class="kutu">
+  </div>
 
 </section>
 
