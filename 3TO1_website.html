@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3TO1 GO BREW — Cold Brew Coffee</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,300&family=Barlow:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0907;
+  --bg2: #0f0c09;
+  --ink: #f0ece4;
+  --muted: #6b6050;
+  --green: #4a8c38;
+  --green-bright: #5db045;
+  --amber: #c8841a;
+  --red: #c1140b;
+  --bronze: #9a5e28;
+  --border: #1e1810;
+  --card: #130f0b;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Barlow', sans-serif;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 48px;
+  background: linear-gradient(180deg, #0b0907ee, transparent);
+  backdrop-filter: blur(4px);
+}
+.nav-logo { display: flex; flex-direction: column; line-height: 1; }
+.nav-logo span:first-child {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 22px; letter-spacing: 0.04em;
+}
+.nav-logo span:last-child {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 11px;
+  color: var(--green-bright); letter-spacing: 0.12em;
+}
+.nav-links { display: flex; gap: 32px; }
+.nav-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--muted);
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+/* HERO */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 48px 80px;
+  position: relative; overflow: hidden;
+}
+.hero-bg-text {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none; overflow: hidden;
+}
+.hero-bg-text span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: clamp(180px, 30vw, 360px);
+  color: var(--green); opacity: 0.035;
+  letter-spacing: -0.04em; user-select: none;
+}
+.hero-content { flex: 1; position: relative; z-index: 2; max-width: 600px; }
+.hero-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.22em;
+  color: var(--green); margin-bottom: 28px;
+  opacity: 0; animation: fadeUp 0.8s 0.2s ease both;
+}
+.hero-countdown {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: clamp(72px, 12vw, 140px);
+  line-height: 0.88; letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  opacity: 0; animation: fadeUp 0.8s 0.4s ease both;
+}
+.hero-countdown .num { color: var(--ink); }
+.hero-countdown .go { color: var(--green-bright); }
+.hero-sub {
+  font-size: clamp(16px, 2vw, 20px); font-weight: 300;
+  color: var(--muted); line-height: 1.7; max-width: 420px;
+  margin-bottom: 40px;
+  opacity: 0; animation: fadeUp 0.8s 0.6s ease both;
+}
+.hero-cta {
+  display: inline-flex; gap: 16px; align-items: center;
+  opacity: 0; animation: fadeUp 0.8s 0.8s ease both;
+}
+.btn-primary {
+  background: var(--green); color: white;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 14px; letter-spacing: 0.12em;
+  text-transform: uppercase; padding: 14px 28px;
+  text-decoration: none; transition: background 0.2s;
+}
+.btn-primary:hover { background: var(--green-bright); }
+.btn-ghost {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.14em;
+  color: var(--muted); text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2px; transition: color 0.2s, border-color 0.2s;
+}
+.btn-ghost:hover { color: var(--ink); border-color: var(--muted); }
+
+/* Bottle SVG */
+.hero-bottle {
+  flex: 0 0 auto; width: clamp(200px, 30vw, 360px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; animation: fadeIn 1.2s 0.5s ease both;
+  position: relative; z-index: 2;
+}
+.hero-bottle svg { filter: drop-shadow(0 40px 80px #0003) drop-shadow(0 0 40px #4a8c3822); }
+
+/* SECTION BASE */
+section { padding: 100px 48px; }
+.section-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--green);
+  margin-bottom: 16px;
+}
+.section-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: clamp(40px, 6vw, 72px);
+  line-height: 0.92; letter-spacing: -0.01em;
+  margin-bottom: 32px;
+}
+.divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+/* PHILOSOPHY */
+#philosophy {
+  background: var(--bg2);
+  text-align: center;
+}
+.philosophy-big {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: clamp(36px, 6vw, 80px);
+  line-height: 0.9; letter-spacing: -0.02em;
+  max-width: 900px; margin: 0 auto 32px;
+}
+.philosophy-big em {
+  font-style: italic; font-weight: 300; color: var(--amber);
+}
+.philosophy-steps {
+  display: flex; justify-content: center; gap: 0;
+  max-width: 700px; margin: 60px auto 0;
+}
+.phil-step {
+  flex: 1; padding: 28px 24px;
+  border-left: 1px solid var(--border);
+  text-align: left;
+}
+.phil-step:last-child { border-right: 1px solid var(--border); }
+.phil-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 48px;
+  color: var(--green); line-height: 1; margin-bottom: 8px;
+}
+.phil-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.phil-desc { font-size: 12px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+/* VALUES */
+#values { max-width: 1200px; margin: 0 auto; }
+.values-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px;
+}
+.val-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--green);
+  padding: 28px 20px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.val-card:hover { border-color: var(--green-bright); background: #181210; }
+.val-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--green); letter-spacing: 0.12em;
+  margin-bottom: 12px;
+}
+.val-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 16px; letter-spacing: 0.06em;
+  margin-bottom: 10px; color: var(--ink);
+}
+.val-desc { font-size: 12px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+/* PRODUCT */
+#product { background: var(--bg2); }
+.product-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start;
+}
+.spec-table { width: 100%; border-collapse: collapse; }
+.spec-table tr { border-bottom: 1px solid var(--border); }
+.spec-table td { padding: 14px 0; font-size: 14px; }
+.spec-table td:first-child {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--green);
+  letter-spacing: 0.1em; padding-right: 20px; white-space: nowrap;
+}
+.spec-table td:last-child { color: var(--ink); font-weight: 600; }
+.ingredient-pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 24px; }
+.pill {
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid var(--green);
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.08em;
+  color: var(--muted); padding: 6px 12px;
+}
+
+/* FORMULA */
+#formula { max-width: 1000px; margin: 0 auto; }
+.formula-steps { display: flex; flex-direction: column; gap: 0; }
+.formula-step {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 24px; padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+.f-num {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 72px;
+  color: var(--green); line-height: 1; opacity: 0.3;
+}
+.f-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 28px; letter-spacing: 0.04em;
+  color: var(--ink); margin-bottom: 8px;
+}
+.f-sub { font-size: 13px; color: var(--muted); margin-bottom: 6px;
+  font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; }
+.f-desc { font-size: 14px; color: #9a8e80; line-height: 1.7; font-weight: 300; max-width: 500px; }
+
+/* WHY GLASS */
+#glass { background: var(--bg2); }
+.glass-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+}
+.glass-quote {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: clamp(28px, 3.5vw, 44px);
+  line-height: 1.05; letter-spacing: -0.01em;
+  border-left: 4px solid var(--green);
+  padding-left: 24px; margin-bottom: 28px;
+}
+.glass-body { font-size: 15px; color: #9a8e80; line-height: 1.75; font-weight: 300; }
+.glass-badges { display: flex; flex-direction: column; gap: 8px; }
+.glass-badge {
+  background: var(--card); border: 1px solid var(--border);
+  border-left: 3px solid var(--bronze);
+  padding: 16px 20px; display: flex; align-items: flex-start; gap: 14px;
+}
+.badge-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.badge-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 14px; letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+.badge-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+/* COMPETITION */
+#competition { max-width: 1100px; margin: 0 auto; }
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.comp-col { display: flex; flex-direction: column; gap: 6px; }
+.comp-header {
+  padding: 20px 24px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 24px; letter-spacing: 0.04em;
+}
+.comp-header.red-bull { background: #c8000b22; border: 1px solid #c8000b44; color: #e05050; }
+.comp-header.threeto1 { background: #4a8c3822; border: 1px solid #4a8c3844; color: var(--green-bright); }
+.comp-row {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 16px 20px; display: flex; align-items: center; gap: 12px;
+}
+.comp-row.bad { border-left: 3px solid #c8000b55; }
+.comp-row.good { border-left: 3px solid var(--green); }
+.comp-icon { font-size: 16px; flex-shrink: 0; }
+.comp-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+.comp-text strong { color: var(--ink); font-size: 12px; font-family: 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.06em; display: block; margin-bottom: 2px; }
+
+/* CAMPAIGN */
+#campaign { background: var(--bg2); }
+.campaign-inner { max-width: 1100px; margin: 0 auto; }
+.campaign-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; margin-top: 40px; }
+.camp-card {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 28px 24px; position: relative; overflow: hidden;
+}
+.camp-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--green), transparent);
+}
+.camp-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--green); letter-spacing: 0.12em; margin-bottom: 10px;
+}
+.camp-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 18px; letter-spacing: 0.04em; margin-bottom: 10px;
+}
+.camp-desc { font-size: 12px; color: var(--muted); line-height: 1.65; font-weight: 300; }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 60px 48px;
+  display: flex; justify-content: space-between; align-items: flex-end;
+  flex-wrap: wrap; gap: 32px;
+}
+.footer-logo {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 48px; line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+.footer-logo span { color: var(--green-bright); display: block; font-size: 14px; font-weight: 700; letter-spacing: 0.12em; }
+.footer-tagline {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-style: italic; font-weight: 300;
+  font-size: 20px; color: var(--muted); letter-spacing: 0.02em;
+}
+.footer-meta {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; color: var(--border); letter-spacing: 0.14em;
+  text-align: right;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes countPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+/* Live countdown in hero */
+#live-count { display: inline-flex; gap: 2px; align-items: baseline; }
+.lc-digit {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: inherit;
+  transition: color 0.15s;
+}
+.lc-dot { color: var(--muted); font-weight: 300; }
+
+/* Noise overlay */
+body::after {
+  content: '';
+  position: fixed; inset: 0; pointer-events: none; z-index: 999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.35;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  section { padding: 72px 24px; }
+  #hero { flex-direction: column; padding: 100px 24px 60px; }
+  .hero-bottle { margin-top: 40px; }
+  .values-grid { grid-template-columns: 1fr 1fr; }
+  .product-inner, .glass-inner, .comp-grid { grid-template-columns: 1fr; }
+  .campaign-grid { grid-template-columns: 1fr; }
+  .philosophy-steps { flex-direction: column; }
+  footer { flex-direction: column; align-items: flex-start; }
+  .footer-meta { text-align: left; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <span>3TO1</span>
+    <span>GO BREW</span>
+  </div>
+  <div class="nav-links">
+    <a href="#philosophy">Philosophy</a>
+    <a href="#values">Values</a>
+    <a href="#product">Product</a>
+    <a href="#competition">vs other products</a>
+    <a href="#campaign">Campaign</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg-text"><span>GO</span></div>
+
+  <div class="hero-content">
+    <div class="hero-label">3TO1 · COLD BREW COFFEE · POLAND</div>
+
+    <div class="hero-countdown">
+      <span class="num3">3</span><span class="lc-dot">...</span>
+      <span class="num2">2</span><span class="lc-dot">...</span>
+      <span class="num1">1</span><span class="lc-dot">.</span><br>
+      <span class="go">GO.</span>
+    </div>
+
+    <p class="hero-sub">
+      Not a drink about slowing down. A drink about crossing the line
+      from thinking into doing. 321 ml. 120 mg natural caffeine. Zero crash.
+    </p>
+
+    <div class="hero-cta">
+      <a href="#product" class="btn-primary">See the Product</a>
+      <a href="#philosophy" class="btn-ghost">The Philosophy →</a>
+    </div>
+  </div>
+
+  
+
+     <html>
+<body>
+
+
+<img src="https://plain-eeur-prod-public.komododecks.com/202606/03/ZeMlgQVTOSbaoI1yLLCU/image.png" class="kutu">
+<style>
+.kutu {
+    position: absolute;
+    margin: 0 auto;
+    right: 730px;
+    width: 225px;
+    height: 450px;
+    opacity: 80%;
+
+}
+</style>
+
+
+</section>
+
+<div class="divider"></div>
+
+<!-- PHILOSOPHY -->
+<section id="philosophy">
+  <div class="section-label reveal">The Philosophy</div>
+  <div class="philosophy-big reveal">
+    Motivation is not something<br>
+    you <em>wait for.</em><br>
+    It is something you <em>create.</em>
+  </div>
+  <p style="font-size:16px;color:var(--muted);font-weight:300;max-width:540px;margin:0 auto;line-height:1.75;" class="reveal">
+    The 3...2...1 is not a ritual. It is a pattern interrupt that cuts through hesitation
+    and gets you into action before doubt has a chance to settle.
+  </p>
+
+  <div class="philosophy-steps" style="margin-top:60px;">
+    <div class="phil-step reveal">
+      <div class="phil-num">3</div>
+      <div class="phil-title">YOU HESITATE</div>
+      <div class="phil-desc">The task is big. The deadline is real. The energy isn't there yet.</div>
+    </div>
+    <div class="phil-step reveal">
+      <div class="phil-num" style="color:var(--amber)">TO</div>
+      <div class="phil-title">YOU PICK UP THE BOTTLE</div>
+      <div class="phil-desc">Cold glass. Clean label. This is the decision.</div>
+    </div>
+    <div class="phil-step reveal">
+      <div class="phil-num" style="color:var(--green-bright)">1</div>
+      <div class="phil-title">YOU GO</div>
+      <div class="phil-desc">Not because you feel ready. Because you chose to be.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- VALUES -->
+<section id="values" style="max-width:1200px;margin:0 auto;padding:100px 48px;">
+  <div class="section-label reveal">Brand Values</div>
+  <div class="section-title reveal">What 3TO1<br>stands for</div>
+  <div class="values-grid">
+    <div class="val-card reveal">
+      <div class="val-num">01</div>
+      <div class="val-name">MOTIVATION</div>
+      <div class="val-desc">Motivation is not something you wait for — it is something you create the moment you decide to move.</div>
+    </div>
+    <div class="val-card reveal">
+      <div class="val-num">02</div>
+      <div class="val-name">PERFORMANCE</div>
+      <div class="val-desc">Once you commit, you go all the way through. Not perfection — full output at the level you're actually capable of.</div>
+    </div>
+    <div class="val-card reveal">
+      <div class="val-num">03</div>
+      <div class="val-name">ENDURANCE</div>
+      <div class="val-desc">Some goals take longer than expected. Staying in it, even when it gets hard, is where real results come from.</div>
+    </div>
+    <div class="val-card reveal">
+      <div class="val-num">04</div>
+      <div class="val-name">FOCUS</div>
+      <div class="val-desc">The biggest threat to productivity is not laziness — it is distraction. Just this task, this moment.</div>
+    </div>
+    <div class="val-card reveal">
+      <div class="val-num">05</div>
+      <div class="val-name">NO PROCRASTINATION</div>
+      <div class="val-desc">Procrastination is not a time management problem. It is a decision problem. Three. Two. One.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRODUCT SPECS -->
+<section id="product">
+  <div class="product-inner">
+    <div>
+      <div class="section-label reveal">The Product</div>
+      <div class="section-title reveal">Built for<br>sustained<br>output.</div>
+      <table class="spec-table reveal">
+        <tr><td>VOLUME</td><td>321 ml</td></tr>
+        <tr><td>CAFFEINE</td><td>120 mg naturally extracted</td></tr>
+        <tr><td>SUGAR</td><td>Zero added</td></tr>
+        <tr><td>BEAN</td><td>Single-origin Colombia, Huila / Antioquia</td></tr>
+        <tr><td>ROAST</td><td>Medium</td></tr>
+        <tr><td>PROCESS</td><td>Washed · Cold Triple Filtered</td></tr>
+        <tr><td>BREW RATIO</td><td>1:10 coffee-to-water</td></tr>
+        <tr><td>STEEP TIME</td><td>Minimum 12 hours</td></tr>
+        <tr><td>PRICE</td><td>12.99 PLN</td></tr>
+        <tr><td>BOTTLE</td><td>100% recycled amber glass</td></tr>
+      </table>
+      <div class="ingredient-pills reveal">
+        <div class="pill">100% ARABICA COFFEE</div>
+        <div class="pill">COLD TRIPLE FILTERED WATER</div>
+        <div class="pill">NOTHING ELSE</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-label reveal">The Formula</div>
+      <div class="formula-steps">
+        <div class="formula-step reveal">
+          <div class="f-num">3</div>
+          <div>
+            <div class="f-sub">STAGE ONE</div>
+            <div class="f-title">THE SOURCE</div>
+            <div class="f-desc">Single-origin 100% Arabica from the high-altitude estates of Huila and Antioquia, Colombia. Medium roasted for smoothness, washed for a sediment-free extract.</div>
+          </div>
+        </div>
+        <div class="formula-step reveal">
+          <div class="f-num" style="color:var(--amber)">2</div>
+          <div>
+            <div class="f-sub">STAGE TWO</div>
+            <div class="f-title">THE EXTRACTION</div>
+            <div class="f-desc">Triple-filtered cold water. Precise 1:10 ratio. Minimum 12 hours slow steep. No heat — cold extraction preserves natural caramelization. Zero bitterness. Zero acidity spike.</div>
+          </div>
+        </div>
+        <div class="formula-step reveal" style="border-bottom:none;">
+          <div class="f-num" style="color:var(--green-bright)">1</div>
+          <div>
+            <div class="f-sub">STAGE THREE</div>
+            <div class="f-title">YOU</div>
+            <div class="f-desc">120 mg of clean caffeine. Immediate focus. Zero crash. The preparation is done. The bottle just makes sure you're ready — and keep going.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHY GLASS -->
+<section id="glass">
+  <div class="glass-inner">
+    <div>
+      <div class="section-label reveal">Packaging</div>
+      <div class="glass-quote reveal">
+        A can is for energy drinks.<br>
+        3TO1 is not an energy drink.
+      </div>
+      <p class="glass-body reveal">
+        We chose 100% recycled glass because the clarity we demand from our extract extends to every material we touch.
+        Cold glass in your hand is a decision before the first sip. It looks like what it is: fuel, not a treat.
+        The smoked amber finish keeps the cold brew colder, protects the flavour, and delivers the smoothness
+        the extraction was built for. The bottle is not packaging. It is part of the product.
+      </p>
+    </div>
+    <div class="glass-badges">
+      <div class="glass-badge reveal">
+        <div class="badge-icon">♻️</div>
+        <div>
+          <div class="badge-title">100% RECYCLED GLASS</div>
+          <div class="badge-sub">No BPA. No microplastics. No compromise. The clarity we demand from our extract extends to every material we use.</div>
+        </div>
+      </div>
+      <div class="glass-badge reveal">
+        <div class="badge-icon">🌡️</div>
+        <div>
+          <div class="badge-title">KEEPS IT COLDER</div>
+          <div class="badge-sub">Glass maintains temperature longer than aluminium. Every sip is as cold as the first.</div>
+        </div>
+      </div>
+      <div class="glass-badge reveal">
+        <div class="badge-icon">☕</div>
+        <div>
+          <div class="badge-title">PROTECTS FLAVOUR</div>
+          <div class="badge-sub">Metal affects taste. Amber glass blocks light and prevents flavour degradation — the coffee tastes exactly as it was brewed.</div>
+        </div>
+      </div>
+      <div class="glass-badge reveal">
+        <div class="badge-icon">🎯</div>
+        <div>
+          <div class="badge-title">INDUSTRIAL MINIMALISM</div>
+          <div class="badge-sub">It belongs next to a laptop, a notebook, a gym bag, or a studio monitor. It looks like what it is: fuel for the modern life.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMPETITION -->
+<section id="competition" style="padding:100px 48px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="section-label reveal">Competitive Analysis</div>
+    <div class="section-title reveal">Why 3TO1<br>wins.</div>
+    <div class="comp-grid">
+      <div class="comp-col">
+        <div class="comp-header red-bull reveal">⚡ OTHERS — THE PROBLEM</div>
+        <div class="comp-row bad reveal"><div class="comp-icon">📉</div><div class="comp-text"><strong>THE CRASH</strong>Energy peaks in 20 minutes, drops hard. The synthetic caffeine and sugar spike work against you within 90 minutes.</div></div>
+        <div class="comp-row bad reveal"><div class="comp-icon">🧪</div><div class="comp-text"><strong>SYNTHETIC INGREDIENTS</strong>Artificial taurine, synthetic caffeine, sucralose or 27g of sugar. Nothing from a natural source.</div></div>
+        <div class="comp-row bad reveal"><div class="comp-icon">🥫</div><div class="comp-text"><strong>THE CAN PROBLEM</strong>Metal affects taste. Every can tastes slightly of its container. The packaging undermines the product.</div></div>
+        <div class="comp-row bad reveal"><div class="comp-icon">🎰</div><div class="comp-text"><strong>WRONG CULTURE</strong>Clubs, vodka mixers, panic all-nighters. That association is a ceiling. It can never fully own the performance space.</div></div>
+        <div class="comp-row bad reveal"><div class="comp-icon">⏱️</div><div class="comp-text"><strong>ONLY 80 MG</strong>80 mg per 250 ml can. Below what a serious work session demands. You need two — and then you crash anyway.</div></div>
+      </div>
+      <div class="comp-col">
+        <div class="comp-header threeto1 reveal">✅ 3TO1 — THE ANSWER</div>
+        <div class="comp-row good reveal"><div class="comp-icon">📈</div><div class="comp-text"><strong>ZERO CRASH FORMULA</strong>Cold brew caffeine absorbs smoothly. No spike, no drop. Sustained output across hours, not minutes.</div></div>
+        <div class="comp-row good reveal"><div class="comp-icon">🌿</div><div class="comp-text"><strong>CLEAN & NATURAL</strong>100% Arabica, cold water, nothing else. Every ingredient has a name you recognise. Zero synthetics.</div></div>
+        <div class="comp-row good reveal"><div class="comp-icon">🫙</div><div class="comp-text"><strong>AMBER GLASS</strong>Protects flavour, keeps it colder, signals premium. The packaging completes the product instead of compromising it.</div></div>
+        <div class="comp-row good reveal"><div class="comp-icon">🎯</div><div class="comp-text"><strong>PERFORMANCE CULTURE</strong>The drink you graduate to. Built for the desk, the gym, the creative sprint — not the club.</div></div>
+        <div class="comp-row good reveal"><div class="comp-icon">⚡</div><div class="comp-text"><strong>120 MG NATURAL CAFFEINE</strong>1.5× the caffeine of other products, naturally extracted, in a single 321 ml bottle.</div></div>
+      </div>
+    </div>
+    <div class="reveal" style="margin-top:24px;background:var(--card);border:1px solid var(--border);border-left:4px solid var(--green);padding:20px 28px;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-style:italic;font-size:22px;color:var(--ink);letter-spacing:0.02em;">
+        "You Chose to be ready, not to fall after 90 minutes."
+      </span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CAMPAIGN -->
+<section id="campaign">
+  <div class="campaign-inner">
+    <div class="section-label reveal">Marketing Campaign</div>
+    <div class="section-title reveal">Three ways<br>to reach them.</div>
+    <div class="campaign-grid">
+      <div class="camp-card reveal">
+        <div class="camp-num">01 · LAUNCH SEQUENCE</div>
+        <div class="camp-title">3...2...1. CAMPAIGN</div>
+        <div class="camp-desc">A three-phase launch built on the countdown platform. Seed before the product hits shelves. Launch with a hero film across four consumer personas. Scale city by city — Warsaw, Kraków, Gdańsk, Wrocław.</div>
+      </div>
+      <div class="camp-card reveal">
+        <div class="camp-num">02 · GESTURE CAMPAIGN</div>
+        <div class="camp-title">RAISE YOUR HAND</div>
+        <div class="camp-desc">The wave is the most optimistic gesture in the world — you raise your hand before you know if they'll wave back. That's momentum. Waving and drinking from a bottle are the same arm motion. 3TO1 owns the gesture.</div>
+      </div>
+      <div class="camp-card reveal">
+        <div class="camp-num">03 · UNDER-CAP REWARD</div>
+        <div class="camp-title">THE LAUNCH SEQUENCE GAME</div>
+        <div class="camp-desc">Every cap has a unique QR code. Scan → mobile reaction game → the faster you tap on GO, the bigger the prize. Grand prize: a trip to the Huila farms in Colombia where the coffee was born.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-logo">
+      3TO1
+      <span>GO BREW</span>
+    </div>
+  </div>
+  <div class="footer-tagline">
+    Stop waiting. Start now.
+  </div>
+  <div class="footer-meta">
+    COLD BREW COFFEE · 321 ML<br>
+    100% RECYCLED GLASS · 3TO1<br>
+    WARSAW, POLAND
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 60);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => observer.observe(el));
+
+// Animated countdown in hero
+const nums = document.querySelectorAll('.hero-countdown .num1, .hero-countdown .num2, .hero-countdown .num3');
+let active = 0;
+
+function pulseCount() {
+    // Tüm renkleri temizle
+    nums.forEach(n => n.style.color = '');
+
+    // Her numaraya kendi rengini ver
+    if (active === 0) {
+        nums[0].style.color = '#c1140b';        // 3 → Kırmızı
+    } else if (active === 1) {
+        nums[1].style.color = '#c8841a';        // 2 → Sarı (gold)
+    } else if (active === 2) {
+        nums[2].style.color = 'var(--green-bright)'; // 1 → Yeşil
+    }
+
+    active = (active + 1) % nums.length;
+}
+
+pulseCount();
+setInterval(pulseCount, 600);
+</script>
+</body>
+</html>
